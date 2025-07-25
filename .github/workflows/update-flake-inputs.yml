@@ -63,7 +63,7 @@ jobs:
           chown $USER $XDG_RUNTIME_DIR
           chmod 0700 $XDG_RUNTIME_DIR
 
-          nix profile add 'nixpkgs#sway'
+          nix profile install 'nixpkgs#sway'
           sway &
           sleep 5  # Give Hyprland some time to start
           result/bin/caelestia-shell -d
