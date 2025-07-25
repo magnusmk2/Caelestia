@@ -71,8 +71,7 @@ jobs:
           pgrep .quickshell-wra || exit 1  # Fail job if shell died
 
           result/bin/caelestia-shell kill
-          swaymsg -s "$(sway --get-socketpath)" exit
-          true
+          killall sway  # Screw using IPC
 
       - name: Check for changes
         id: check
