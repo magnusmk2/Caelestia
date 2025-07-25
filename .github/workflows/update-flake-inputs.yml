@@ -71,7 +71,8 @@ jobs:
           pgrep .quickshell-wra || exit 1  # Fail job if shell died
 
           result/bin/caelestia-shell kill
-          swaymsg exit
+          swaymsg -s "$(sway --get-socketpath)" exit
+          true
 
       - name: Check for changes
         id: check
