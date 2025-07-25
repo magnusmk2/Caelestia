@@ -37,7 +37,7 @@ jobs:
           chown $USER $XDG_RUNTIME_DIR
           chmod 0700 $XDG_RUNTIME_DIR
 
-          nix-env -iA nixpkgs.hyprland
+          nix profile install 'nixpkgs#hyprland'
           Hyprland &
           sleep 5  # Give Hyprland some time to start
           hyprctl -i 0 dispatch exec "$(pwd)/result/bin/caelestia-shell"
