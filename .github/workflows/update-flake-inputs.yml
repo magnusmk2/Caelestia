@@ -68,7 +68,7 @@ jobs:
           sleep 5  # Give Hyprland some time to start
           result/bin/caelestia-shell -d
           sleep 5  # Give the shell some time to start
-          pgrep .caelestia-shell || exit 1  # Fail job if shell died
+          pgrep .quickshell-wra || exit 1  # Fail job if shell died
 
           result/bin/caelestia-shell kill
           swaymsg exit
