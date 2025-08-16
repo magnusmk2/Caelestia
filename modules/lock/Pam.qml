@@ -1,5 +1,6 @@
 import qs.config
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Services.Pam
 import QtQuick
@@ -64,23 +65,23 @@ Scope {
     PamContext {
         id: fprint
 
+        property bool available
         property int tries
-        property int errorRetries
 
         config: "fprint"
         configDirectory: Quickshell.shellDir + "/assets/pam.d"
 
         onCompleted: res => {
+            if (!available)
+                return;
+
             if (res === PamResult.Success)
                 return root.lock.unlock();
 
             if (res === PamResult.Error) {
-                if (errorRetries < 3) {
-                    errorRetries++;
-                    abort();
-                    start();
-                }
-                return;
+                root.fprintState = "error";
+                abort();
+                start();
             } else if (res === PamResult.MaxTries) {
                 // Isn't actually the real max tries as pam only reports completed
                 // when max tries is reached.
@@ -100,6 +101,12 @@ Scope {
 
             fprintStateReset.start();
         }
+    }
+
+    Process {
+        running: true
+        command: ["sh", "-c", "fprintd-list $USER"]
+        onExited: code => fprint.available = code === 0
     }
 
     Timer {
@@ -123,7 +130,7 @@ Scope {
         target: root.lock
 
         function onSecureChanged(): void {
-            if (Config.lock.enableFprint && root.lock.secure)
+            if (Config.lock.enableFprint && fprint.available && root.lock.secure)
                 fprint.start();
         }
 

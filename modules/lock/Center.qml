@@ -160,6 +160,8 @@ ColumnLayout {
                     anchors.centerIn: parent
                     animate: true
                     text: {
+                        if (root.lock.pam.fprintState === "error")
+                            return "error";
                         if (root.lock.pam.fprint.tries >= Config.lock.maxFprintTries || root.lock.pam.fprintState === "fail")
                             return "fingerprint_off";
                         if (root.lock.pam.fprint.active)
