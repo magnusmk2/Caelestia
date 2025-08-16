@@ -137,8 +137,10 @@ Scope {
         target: root.lock
 
         function onSecureChanged(): void {
-            if (Config.lock.enableFprint && fprint.available && root.lock.secure)
+            if (Config.lock.enableFprint && fprint.available && root.lock.secure) {
                 fprint.start();
+                fprint.tries = 0;
+            }
         }
 
         function onUnlock(): void {
