@@ -67,6 +67,7 @@ Scope {
 
         property bool available
         property int tries
+        property int errorTries
 
         config: "fprint"
         configDirectory: Quickshell.shellDir + "/assets/pam.d"
@@ -80,8 +81,11 @@ Scope {
 
             if (res === PamResult.Error) {
                 root.fprintState = "error";
-                abort();
-                start();
+                if (errorTries < 3) {
+                    errorTries++;
+                    abort();
+                    start();
+                }
             } else if (res === PamResult.MaxTries) {
                 // Isn't actually the real max tries as pam only reports completed
                 // when max tries is reached.
@@ -123,7 +127,10 @@ Scope {
         id: fprintStateReset
 
         interval: 4000
-        onTriggered: root.fprintState = ""
+        onTriggered: {
+            root.fprintState = "";
+            fprint.errorTries = 0;
+        }
     }
 
     Connections {
