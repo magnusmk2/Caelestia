@@ -1,3 +1,4 @@
+import qs.config
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Pam
@@ -9,12 +10,15 @@ Scope {
     required property WlSessionLock lock
 
     readonly property alias passwd: passwd
-    readonly property bool active: passwd.active
+    readonly property alias fprint: fprint
     property string state
+    property string fprintState
     property string buffer
 
+    readonly property bool fprintRunning: fprintState === "" && fprint.active && fprint.message.includes("fingerprint")
+
     function handleKey(event: KeyEvent): void {
-        if (passwd.active)
+        if (passwd.active || state === "max")
             return;
 
         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
@@ -57,18 +61,75 @@ Scope {
         }
     }
 
+    PamContext {
+        id: fprint
+
+        property int tries
+        property int errorRetries
+
+        config: "fprint"
+        configDirectory: Quickshell.shellDir + "/assets/pam.d"
+
+        onCompleted: res => {
+            if (res === PamResult.Success)
+                return root.lock.unlock();
+
+            if (res === PamResult.Error) {
+                if (errorRetries < 3) {
+                    errorRetries++;
+                    abort();
+                    start();
+                }
+                return;
+            } else if (res === PamResult.MaxTries) {
+                // Isn't actually the real max tries as pam only reports completed
+                // when max tries is reached.
+                if (tries < Config.lock.maxFprintTries) {
+                    tries++;
+                    // Restart if not actually real max tries
+                    start();
+                } else {
+                    root.fprintState = "max";
+                    abort();
+                }
+            } else if (res === PamResult.Failed) {
+                root.fprintState = "fail";
+                abort();
+                start();
+            }
+
+            fprintStateReset.start();
+        }
+    }
+
     Timer {
         id: stateReset
 
         interval: 4000
-        onTriggered: root.state = ""
+        onTriggered: {
+            if (root.state !== "max")
+                root.state = "";
+        }
+    }
+
+    Timer {
+        id: fprintStateReset
+
+        interval: 4000
+        onTriggered: root.fprintState = ""
     }
 
     Connections {
         target: root.lock
 
+        function onSecureChanged(): void {
+            if (Config.lock.enableFprint && root.lock.secure)
+                fprint.start();
+        }
+
         function onUnlock(): void {
             root.buffer = "";
+            fprint.abort();
         }
     }
 }
