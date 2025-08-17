@@ -81,16 +81,16 @@ Scope {
 
             if (res === PamResult.Error) {
                 root.fprintState = "error";
-                if (errorTries < 3) {
-                    errorTries++;
+                errorTries++;
+                if (errorTries < 5) {
                     abort();
-                    start();
+                    errorRetry.restart();
                 }
             } else if (res === PamResult.MaxTries) {
                 // Isn't actually the real max tries as pam only reports completed
                 // when max tries is reached.
+                tries++;
                 if (tries < Config.lock.maxFprintTries) {
-                    tries++;
                     // Restart if not actually real max tries
                     start();
                 } else {
@@ -111,6 +111,13 @@ Scope {
         running: true
         command: ["sh", "-c", "fprintd-list $USER"]
         onExited: code => fprint.available = code === 0
+    }
+
+    Timer {
+        id: errorRetry
+
+        interval: 800
+        onTriggered: fprint.start()
     }
 
     Timer {
@@ -140,6 +147,7 @@ Scope {
             if (Config.lock.enableFprint && fprint.available && root.lock.secure) {
                 fprint.start();
                 fprint.tries = 0;
+                fprint.errorTries = 0;
             }
         }
 
