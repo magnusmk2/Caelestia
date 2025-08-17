@@ -168,8 +168,8 @@ ColumnLayout {
                             return "fingerprint";
                         return "lock";
                     }
-                    color: !root.lock.pam.fprintRunning && root.lock.pam.fprintState ? Colours.palette.m3error : Colours.palette.m3onSurface
-                    opacity: root.lock.pam.fprintRunning ? 0 : 1
+                    color: root.lock.pam.fprintState ? Colours.palette.m3error : Colours.palette.m3onSurface
+                    opacity: root.lock.pam.passwd.active ? 0 : 1
 
                     Behavior on opacity {
                         Anim {}
@@ -178,7 +178,7 @@ ColumnLayout {
 
                 StyledBusyIndicator {
                     anchors.fill: parent
-                    running: root.lock.pam.fprintRunning
+                    running: root.lock.pam.passwd.active
                 }
             }
 

@@ -16,8 +16,6 @@ Scope {
     property string fprintState
     property string buffer
 
-    readonly property bool fprintRunning: fprintState === "" && fprint.active && fprint.message.includes("fingerprint")
-
     function handleKey(event: KeyEvent): void {
         if (passwd.active || state === "max")
             return;
