@@ -17,6 +17,8 @@ Scope {
     property string fprintState
     property string buffer
 
+    signal flashMsg
+
     function handleKey(event: KeyEvent): void {
         if (passwd.active || state === "max")
             return;
@@ -67,6 +69,7 @@ Scope {
             else if (res === PamResult.Failed)
                 root.state = "fail";
 
+            root.flashMsg();
             stateReset.restart();
         }
     }
@@ -120,6 +123,7 @@ Scope {
                 }
             }
 
+            root.flashMsg();
             fprintStateReset.start();
         }
     }

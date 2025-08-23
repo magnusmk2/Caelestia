@@ -275,6 +275,14 @@ ColumnLayout {
             }
         }
 
+        Connections {
+            target: root.lock.pam
+
+            function onFlashMsg(): void {
+                flashAnim.restart();
+            }
+        }
+
         SequentialAnimation {
             id: appearAnim
 
