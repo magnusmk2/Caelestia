@@ -246,12 +246,12 @@ ColumnLayout {
 
         scale: 0.7
         opacity: 0
-        color: pam.lockMessage || pam.fprintState || pam.state ? Colours.palette.m3error : Colours.palette.m3onSurface
+        color: Colours.palette.m3error
 
         font.pointSize: Appearance.font.size.small
         font.family: Appearance.font.family.mono
         horizontalAlignment: Qt.AlignHCenter
-        elide: Text.ElideRight
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
         onMsgChanged: {
             if (msg) {
@@ -260,12 +260,14 @@ ColumnLayout {
                     text = msg;
                     animate = false;
 
-                    if (exitAnim.running)
+                    exitAnim.stop();
+                    if (scale < 1)
                         appearAnim.restart();
                     else
                         flashAnim.restart();
                 } else {
                     text = msg;
+                    exitAnim.stop();
                     appearAnim.restart();
                 }
             } else {
@@ -279,39 +281,28 @@ ColumnLayout {
             target: root.lock.pam
 
             function onFlashMsg(): void {
-                flashAnim.restart();
+                exitAnim.stop();
+                if (message.scale < 1)
+                    appearAnim.restart();
+                else
+                    flashAnim.restart();
             }
         }
 
-        SequentialAnimation {
+        Anim {
             id: appearAnim
 
-            ParallelAnimation {
-                Anim {
-                    target: message
-                    property: "scale"
-                    to: 1
-                }
-                Anim {
-                    target: message
-                    property: "opacity"
-                    to: 1
-                }
-            }
-            ScriptAction {
-                script: flashAnim.restart()
-            }
+            target: message
+            properties: "scale,opacity"
+            to: 1
+            onFinished: flashAnim.restart()
         }
 
         SequentialAnimation {
             id: flashAnim
 
-            MessageAnim {
-                to: 0.3
-            }
-            MessageAnim {
-                to: 1
-            }
+            loops: 2
+
             MessageAnim {
                 to: 0.3
             }
