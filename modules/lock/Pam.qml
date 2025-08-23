@@ -38,6 +38,9 @@ Scope {
     PamContext {
         id: passwd
 
+        config: "passwd"
+        configDirectory: Quickshell.shellDir + "/assets/pam.d"
+
         onMessageChanged: {
             if (message.startsWith("The account is locked"))
                 root.lockMessage = message;
