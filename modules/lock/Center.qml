@@ -228,13 +228,19 @@ ColumnLayout {
 
             if (pam.state === "max" && pam.fprintState === "max")
                 return qsTr("Maximum password and fingerprint attempts reached.");
-            if (pam.state === "max")
-                return qsTr("Maximum password attempts reached. Please use fingerprint.");
+            if (pam.state === "max") {
+                if (pam.fprint.available)
+                    return qsTr("Maximum password attempts reached. Please use fingerprint.");
+                return qsTr("Maximum password attempts reached.");
+            }
             if (pam.fprintState === "max")
                 return qsTr("Maximum fingerprint attempts reached. Please use password.");
 
-            if (pam.state === "fail")
-                return qsTr("Incorrect password. Please try again or use fingerprint.");
+            if (pam.state === "fail") {
+                if (pam.fprint.available)
+                    return qsTr("Incorrect password. Please try again or use fingerprint.");
+                return qsTr("Incorrect password. Please try again.");
+            }
             if (pam.fprintState === "fail")
                 return qsTr("Fingerprint not recognized (%1/%2). Please try again or use password.").arg(pam.fprint.tries).arg(Config.lock.maxFprintTries);
 
