@@ -67,8 +67,21 @@ Scope {
         property int tries
         property int errorTries
 
+        function checkAvail(): void {
+            if (!available || !Config.lock.enableFprint || !root.lock.secure) {
+                abort();
+                return;
+            }
+
+            tries = 0;
+            errorTries = 0;
+            start();
+        }
+
         config: "fprint"
         configDirectory: Quickshell.shellDir + "/assets/pam.d"
+
+        onAvailableChanged: checkAvail()
 
         onCompleted: res => {
             if (!available)
@@ -106,7 +119,8 @@ Scope {
     }
 
     Process {
-        running: true
+        id: availProc
+
         command: ["sh", "-c", "fprintd-list $USER"]
         onExited: code => fprint.available = code === 0
     }
@@ -142,16 +156,21 @@ Scope {
         target: root.lock
 
         function onSecureChanged(): void {
-            if (Config.lock.enableFprint && fprint.available && root.lock.secure) {
-                fprint.start();
-                fprint.tries = 0;
-                fprint.errorTries = 0;
-            }
+            if (root.lock.secure)
+                availProc.running = true;
         }
 
         function onUnlock(): void {
             root.buffer = "";
             fprint.abort();
+        }
+    }
+
+    Connections {
+        target: Config.lock
+
+        function onEnableFprintChanged(): void {
+            fprint.checkAvail();
         }
     }
 }
