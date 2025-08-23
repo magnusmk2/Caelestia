@@ -18,6 +18,7 @@ ColumnLayout {
     readonly property int centerWidth: Config.lock.sizes.centerWidth * centerScale
 
     Layout.preferredWidth: centerWidth
+    Layout.fillWidth: false
     Layout.fillHeight: true
 
     spacing: Appearance.spacing.large * 2
@@ -213,6 +214,130 @@ ColumnLayout {
                 }
             }
         }
+    }
+
+    StyledText {
+        id: message
+
+        readonly property Pam pam: root.lock.pam
+        readonly property string msg: {
+            if (pam.fprintState === "error")
+                return qsTr("ERROR: %1").arg(pam.fprint.message);
+            if (pam.state === "error")
+                return qsTr("ERROR: %1").arg(pam.passwd.message);
+
+            if (pam.lockMessage)
+                return pam.lockMessage;
+
+            if (pam.state === "max" && pam.fprintState === "max")
+                return qsTr("Maximum password and fingerprint attempts reached.");
+            if (pam.state === "max")
+                return qsTr("Maximum password attempts reached. Please use fingerprint.");
+            if (pam.fprintState === "max")
+                return qsTr("Maximum fingerprint attempts reached. Please use password.");
+
+            if (pam.state === "fail")
+                return qsTr("Incorrect password. Please try again or use fingerprint.");
+            if (pam.fprintState === "fail")
+                return qsTr("Fingerprint not recognized (%1/%2). Please try again or use password.").arg(pam.fprint.tries).arg(Config.lock.maxFprintTries);
+
+            return "";
+        }
+
+        Layout.fillWidth: true
+        Layout.topMargin: -Appearance.spacing.large
+
+        scale: 0.7
+        opacity: 0
+        color: pam.lockMessage || pam.fprintState || pam.state ? Colours.palette.m3error : Colours.palette.m3onSurface
+
+        font.pointSize: Appearance.font.size.small
+        font.family: Appearance.font.family.mono
+        horizontalAlignment: Qt.AlignHCenter
+        elide: Text.ElideRight
+
+        onMsgChanged: {
+            if (msg) {
+                if (opacity > 0) {
+                    animate = true;
+                    text = msg;
+                    animate = false;
+
+                    if (exitAnim.running)
+                        appearAnim.restart();
+                    else
+                        flashAnim.restart();
+                } else {
+                    text = msg;
+                    appearAnim.restart();
+                }
+            } else {
+                appearAnim.stop();
+                flashAnim.stop();
+                exitAnim.start();
+            }
+        }
+
+        SequentialAnimation {
+            id: appearAnim
+
+            ParallelAnimation {
+                Anim {
+                    target: message
+                    property: "scale"
+                    to: 1
+                }
+                Anim {
+                    target: message
+                    property: "opacity"
+                    to: 1
+                }
+            }
+            ScriptAction {
+                script: flashAnim.restart()
+            }
+        }
+
+        SequentialAnimation {
+            id: flashAnim
+
+            MessageAnim {
+                to: 0.3
+            }
+            MessageAnim {
+                to: 1
+            }
+            MessageAnim {
+                to: 0.3
+            }
+            MessageAnim {
+                to: 1
+            }
+        }
+
+        ParallelAnimation {
+            id: exitAnim
+
+            Anim {
+                target: message
+                property: "scale"
+                to: 0.7
+                duration: Appearance.anim.durations.large
+            }
+            Anim {
+                target: message
+                property: "opacity"
+                to: 0
+                duration: Appearance.anim.durations.large
+            }
+        }
+    }
+
+    component MessageAnim: NumberAnimation {
+        target: message
+        property: "opacity"
+        duration: Appearance.anim.durations.small
+        easing.type: Easing.Linear
     }
 
     component Anim: NumberAnimation {

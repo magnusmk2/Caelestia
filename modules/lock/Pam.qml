@@ -12,6 +12,7 @@ Scope {
 
     readonly property alias passwd: passwd
     readonly property alias fprint: fprint
+    property string lockMessage
     property string state
     property string fprintState
     property string buffer
@@ -36,6 +37,13 @@ Scope {
 
     PamContext {
         id: passwd
+
+        onMessageChanged: {
+            if (message.startsWith("The account is locked"))
+                root.lockMessage = message;
+            else if (root.lockMessage && message.endsWith(" left to unlock)"))
+                root.lockMessage += "\n" + message;
+        }
 
         onResponseRequiredChanged: {
             if (!responseRequired)
@@ -103,15 +111,12 @@ Scope {
                 tries++;
                 if (tries < Config.lock.maxFprintTries) {
                     // Restart if not actually real max tries
+                    root.fprintState = "fail";
                     start();
                 } else {
                     root.fprintState = "max";
                     abort();
                 }
-            } else if (res === PamResult.Failed) {
-                root.fprintState = "fail";
-                abort();
-                start();
             }
 
             fprintStateReset.start();
@@ -156,12 +161,16 @@ Scope {
         target: root.lock
 
         function onSecureChanged(): void {
-            if (root.lock.secure)
+            if (root.lock.secure) {
                 availProc.running = true;
+                root.buffer = "";
+                root.state = "";
+                root.fprintState = "";
+                root.lockMessage = "";
+            }
         }
 
         function onUnlock(): void {
-            root.buffer = "";
             fprint.abort();
         }
     }
