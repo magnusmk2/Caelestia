@@ -89,8 +89,6 @@ Scope {
         config: "fprint"
         configDirectory: Quickshell.shellDir + "/assets/pam.d"
 
-        onAvailableChanged: checkAvail()
-
         onCompleted: res => {
             if (!available)
                 return;
@@ -127,7 +125,10 @@ Scope {
         id: availProc
 
         command: ["sh", "-c", "fprintd-list $USER"]
-        onExited: code => fprint.available = code === 0
+        onExited: code => {
+            fprint.available = code === 0;
+            fprint.checkAvail();
+        }
     }
 
     Timer {
