@@ -22,16 +22,16 @@ exclude: |
     .*\.lock$
   )$
 
-# Fail fast - stop on first failure for faster feedback
-fail_fast: true
+# Fail fast - disabled to see all issues at once (best practice for comprehensive checking)
+fail_fast: false
 
 # Minimum pre-commit version required
 minimum_pre_commit_version: "3.0.0"
 
 repos:
-  # General file checks - using latest stable version
+  # General file checks - using actual latest version
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -115,17 +115,17 @@ repos:
   #     - id: shellcheck
   #       args: ['-e', 'SC1091']  # Ignore sourcing non-existent files
 
-  # YAML/JSON/Markdown formatting - latest stable
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+  # YAML/JSON/Markdown formatting - using working alternative since mirrors-prettier is archived
+  - repo: https://github.com/rbubley/mirrors-prettier
+    rev: v3.3.3
     hooks:
       - id: prettier
         files: '\.(yaml|yml|json|md)$'
         exclude: '(\.github/workflows/.*\.yml$|node_modules/)' # Don't format GitHub Actions or node_modules
 
-  # Git commit message validation - latest stable
+  # Git commit message validation - actual latest version
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.29.1
+    rev: v4.8.3
     hooks:
       - id: commitizen
         stages: [commit-msg]
