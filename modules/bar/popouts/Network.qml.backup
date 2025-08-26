@@ -1,0 +1,634 @@
+pragma ComponentBehavior: Bound
+
+import qs.components
+import qs.components.controls
+import qs.services
+import qs.config
+import qs.utils
+import Quickshell
+import QtQuick
+import QtQuick.Layouts
+
+ColumnLayout {
+    id: root
+
+    property string connectingToSsid: ""
+    property bool wifiExpanded: false
+
+    spacing: Appearance.spacing.small
+    width: Config.bar.sizes.networkWidth
+
+    // Internet Section
+    StyledText {
+        Layout.topMargin: Appearance.padding.normal
+        Layout.rightMargin: Appearance.padding.small
+        text: Network.internetConnected ? qsTr("Internet connected") : qsTr("Internet disconnected")
+        font.weight: 500
+        color: Network.internetConnected ? Colours.palette.m3primary : Colours.palette.m3error
+    }
+
+    // Internet connection details (only show when connected)
+    ColumnLayout {
+        visible: Network.internetConnected
+        spacing: Appearance.spacing.smaller
+
+        RowLayout {
+            visible: Network.publicIpAddress
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: "public"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                text: qsTr("Public IP: %1").arg(Network.publicIpAddress)
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+        }
+
+        RowLayout {
+            visible: Network.pingLatency > 0
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: "speed"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                text: qsTr("Ping: %1ms").arg(Network.pingLatency)
+                color: Network.pingLatency < 50 ? Colours.palette.m3primary :
+                       Network.pingLatency < 100 ? Colours.palette.m3tertiary : Colours.palette.m3error
+                font.pointSize: Appearance.font.size.small
+            }
+        }
+
+        RowLayout {
+            visible: Network.dnsServer
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: "dns"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                text: qsTr("DNS: %1").arg(Network.dnsServer)
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+        }
+    }
+
+    // Separator between Internet and VPN
+    Rectangle {
+        Layout.fillWidth: true
+        Layout.topMargin: Appearance.spacing.small
+        Layout.bottomMargin: Appearance.spacing.small
+        Layout.rightMargin: Appearance.padding.small
+        height: 1
+        color: Colours.palette.m3outlineVariant
+        opacity: 0.5
+    }
+
+    // VPN Section
+    RowLayout {
+        Layout.fillWidth: true
+        Layout.rightMargin: Appearance.padding.small
+
+        StyledText {
+            Layout.fillWidth: true
+            text: Network.vpnConnected ? qsTr("VPN connected") : qsTr("VPN disconnected")
+            font.weight: 500
+            color: Network.vpnConnected ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+        }
+
+        Toggle {
+            label: ""
+            checked: Network.vpnConnected
+            toggle.onToggled: Network.toggleVpn(checked)
+        }
+    }
+
+    // VPN connection details (only show when connected)
+    ColumnLayout {
+        visible: Network.vpnConnected
+        spacing: Appearance.spacing.smaller
+
+        RowLayout {
+            visible: Network.vpnConnectionName
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: "vpn_key"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                Layout.fillWidth: true
+                text: Network.vpnConnectionName
+                color: Colours.palette.m3onSurface
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                text: qsTr("Connected")
+                color: Colours.palette.m3primary
+                font.pointSize: Appearance.font.size.small
+                font.weight: 500
+            }
+        }
+
+        RowLayout {
+            visible: Network.vpnType
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: "security"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                text: qsTr("Type: %1").arg(Network.vpnType.toUpperCase())
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+        }
+
+        RowLayout {
+            visible: Network.vpnServerAddress && !Network.mullvadConnected
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: "router"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                text: qsTr("Server: %1").arg(Network.vpnServerAddress)
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+        }
+
+        // Mullvad-specific information (only show when connected to Mullvad)
+        RowLayout {
+            visible: Network.mullvadConnected && Network.mullvadLocation
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: "location_on"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                text: qsTr("Location: %1").arg(Network.mullvadLocation)
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+        }
+
+        RowLayout {
+            visible: Network.mullvadConnected && Network.mullvadNodeName
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: "dns"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                text: qsTr("Node: %1").arg(Network.mullvadNodeName)
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+        }
+
+        RowLayout {
+            visible: Network.mullvadConnected && Network.mullvadServerType
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: "security"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                text: qsTr("Protocol: %1").arg(Network.mullvadServerType)
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+        }
+    }
+
+    // Separator between VPN and Ethernet
+    Rectangle {
+        Layout.fillWidth: true
+        Layout.topMargin: Appearance.spacing.small
+        Layout.bottomMargin: Appearance.spacing.small
+        Layout.rightMargin: Appearance.padding.small
+        height: 1
+        color: Colours.palette.m3outlineVariant
+        opacity: 0.5
+    }
+
+    // Ethernet Section
+    StyledText {
+        Layout.rightMargin: Appearance.padding.small
+        text: Network.ethernetConnected ?
+            qsTr("Ethernet (%1 connection%2)").arg(Network.ethernetConnections.length).arg(Network.ethernetConnections.length > 1 ? "s" : "") :
+            qsTr("Ethernet disconnected")
+        font.weight: 500
+        color: Network.ethernetConnected ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+
+
+    }
+
+    // Dynamic Ethernet connections (show all connected interfaces)
+    Repeater {
+        model: Network.ethernetConnections
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: Appearance.spacing.smaller
+
+            required property var modelData
+            required property int index
+
+
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Appearance.spacing.small
+
+                MaterialIcon {
+                    text: "cable"
+                    color: Colours.palette.m3onSurfaceVariant
+                    font.pointSize: Appearance.font.size.small
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: {
+                        const connection = Network.ethernetConnections[index];
+                        return (connection && connection.connectionName && connection.connectionName !== "") ?
+                               connection.connectionName :
+                               qsTr("Wired connection");
+                    }
+                    color: Colours.palette.m3onSurface
+                    font.pointSize: Appearance.font.size.small
+                }
+
+                StyledText {
+                    visible: {
+                        const connection = Network.ethernetConnections[index];
+                        return connection && connection.device && connection.device !== "";
+                    }
+                    text: {
+                        const connection = Network.ethernetConnections[index];
+                        return qsTr("(%1)").arg(connection ? connection.device || "" : "");
+                    }
+                    color: Colours.palette.m3onSurfaceVariant
+                    font.pointSize: Appearance.font.size.small
+                }
+
+                Toggle {
+                    label: ""
+                    checked: true // Always true since we only show connected ones
+                    toggle.onToggled: {
+                        const connection = Network.ethernetConnections[index];
+                        if (connection) {
+                            Network.toggleEthernet(connection.connectionName, checked);
+                        }
+                    }
+                }
+            }
+
+            RowLayout {
+                visible: {
+                    const connection = Network.ethernetConnections[index];
+                    return connection && connection.ipAddress && connection.ipAddress !== "";
+                }
+                spacing: Appearance.spacing.small
+
+                MaterialIcon {
+                    text: "language"
+                    color: Colours.palette.m3onSurfaceVariant
+                    font.pointSize: Appearance.font.size.small
+                }
+
+                StyledText {
+                    text: {
+                        const connection = Network.ethernetConnections[index];
+                        return qsTr("IP: %1").arg(connection ? connection.ipAddress || "" : "");
+                    }
+                    color: Colours.palette.m3onSurfaceVariant
+                    font.pointSize: Appearance.font.size.small
+                }
+            }
+
+            RowLayout {
+                visible: {
+                    const connection = Network.ethernetConnections[index];
+                    return connection && connection.macAddress && connection.macAddress !== "";
+                }
+                spacing: Appearance.spacing.small
+
+                MaterialIcon {
+                    text: "settings_ethernet"
+                    color: Colours.palette.m3onSurfaceVariant
+                    font.pointSize: Appearance.font.size.small
+                }
+
+                StyledText {
+                    text: {
+                        const connection = Network.ethernetConnections[index];
+                        return qsTr("MAC: %1").arg(connection ? connection.macAddress || "" : "");
+                    }
+                    color: Colours.palette.m3onSurfaceVariant
+                    font.pointSize: Appearance.font.size.small
+                }
+            }
+        }
+    }
+
+    // Separator between Ethernet and WiFi
+    Rectangle {
+        Layout.fillWidth: true
+        Layout.topMargin: Appearance.spacing.small
+        Layout.bottomMargin: Appearance.spacing.small
+        Layout.rightMargin: Appearance.padding.small
+        height: 1
+        color: Colours.palette.m3outlineVariant
+        opacity: 0.5
+    }
+
+    // WiFi Section
+    StyledText {
+        Layout.rightMargin: Appearance.padding.small
+        text: qsTr("Wifi %1").arg(Network.wifiEnabled ? "enabled" : "disabled")
+        font.weight: 500
+    }
+
+    Toggle {
+        label: ""
+        checked: Network.wifiEnabled
+        toggle.onToggled: Network.enableWifi(checked)
+    }
+
+    Repeater {
+        model: ScriptModel {
+            values: [...Network.networks].sort((a, b) => {
+                if (a.active !== b.active)
+                    return b.active - a.active;
+                return b.strength - a.strength;
+            }).slice(0, root.wifiExpanded ? 8 : 3)
+        }
+
+        RowLayout {
+            id: networkItem
+
+            required property Network.AccessPoint modelData
+            readonly property bool isConnecting: root.connectingToSsid === modelData.ssid
+            readonly property bool loading: networkItem.isConnecting
+
+            Layout.fillWidth: true
+            Layout.rightMargin: Appearance.padding.small
+            spacing: Appearance.spacing.small
+
+            opacity: 0
+            scale: 0.7
+
+            Component.onCompleted: {
+                opacity = 1;
+                scale = 1;
+            }
+
+            Behavior on opacity {
+                Anim {}
+            }
+
+            Behavior on scale {
+                Anim {}
+            }
+
+            MaterialIcon {
+                text: Icons.getNetworkIcon(networkItem.modelData.strength)
+                color: networkItem.modelData.active ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+            }
+
+            MaterialIcon {
+                visible: networkItem.modelData.isSecure
+                text: "lock"
+                font.pointSize: Appearance.font.size.small
+            }
+
+            StyledText {
+                Layout.leftMargin: Appearance.spacing.small / 2
+                Layout.rightMargin: Appearance.spacing.small / 2
+                Layout.fillWidth: true
+                text: networkItem.modelData.ssid
+                elide: Text.ElideRight
+                font.weight: networkItem.modelData.active ? 500 : 400
+                color: networkItem.modelData.active ? Colours.palette.m3primary : Colours.palette.m3onSurface
+            }
+
+            StyledRect {
+                id: connectBtn
+
+                implicitWidth: implicitHeight
+                implicitHeight: connectIcon.implicitHeight + Appearance.padding.small
+
+                radius: Appearance.rounding.full
+                color: Qt.alpha(Colours.palette.m3primary, networkItem.modelData.active ? 1 : 0)
+
+                StyledBusyIndicator {
+                    anchors.fill: parent
+                    running: networkItem.loading
+                }
+
+                StateLayer {
+                    color: networkItem.modelData.active ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                    disabled: networkItem.loading || !Network.wifiEnabled
+
+                    function onClicked(): void {
+                        if (networkItem.modelData.active) {
+                            Network.disconnectFromNetwork();
+                        } else {
+                            root.connectingToSsid = networkItem.modelData.ssid;
+                            Network.connectToNetwork(networkItem.modelData.ssid, "");
+                        }
+                    }
+                }
+
+                MaterialIcon {
+                    id: connectIcon
+
+                    anchors.centerIn: parent
+                    animate: true
+                    text: networkItem.modelData.active ? "link_off" : "link"
+                    color: networkItem.modelData.active ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+
+                    opacity: networkItem.loading ? 0 : 1
+
+                    Behavior on opacity {
+                        Anim {}
+                    }
+                }
+            }
+        }
+    }
+
+    // Expand/Collapse WiFi Networks Button
+    StyledRect {
+        Layout.topMargin: Appearance.spacing.smaller
+        Layout.fillWidth: true
+        Layout.rightMargin: Appearance.padding.small
+        implicitHeight: expandButton.implicitHeight + Appearance.padding.small * 2
+
+        visible: Network.networks.length > 3
+        radius: Appearance.rounding.small
+        color: "transparent"
+
+        StateLayer {
+            color: Colours.palette.m3onSurface
+
+            function onClicked(): void {
+                root.wifiExpanded = !root.wifiExpanded;
+            }
+        }
+
+        RowLayout {
+            id: expandButton
+
+            anchors.centerIn: parent
+            spacing: Appearance.spacing.small
+
+            MaterialIcon {
+                text: root.wifiExpanded ? "expand_less" : "expand_more"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+
+                Behavior on rotation {
+                    Anim {}
+                }
+            }
+
+            StyledText {
+                text: root.wifiExpanded ?
+                    qsTr("Show less (%1 total)").arg(Network.networks.length) :
+                    qsTr("Show more (%1 total)").arg(Network.networks.length)
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+            }
+
+            MaterialIcon {
+                text: root.wifiExpanded ? "expand_less" : "expand_more"
+                color: Colours.palette.m3onSurfaceVariant
+                font.pointSize: Appearance.font.size.small
+
+                Behavior on rotation {
+                    Anim {}
+                }
+            }
+        }
+    }
+
+    StyledRect {
+        Layout.topMargin: Appearance.spacing.small
+        Layout.fillWidth: true
+        implicitHeight: rescanBtn.implicitHeight + Appearance.padding.small * 2
+
+        radius: Appearance.rounding.full
+        color: Colours.palette.m3primaryContainer
+
+        StateLayer {
+            color: Colours.palette.m3onPrimaryContainer
+            disabled: Network.scanning || !Network.wifiEnabled
+
+            function onClicked(): void {
+                Network.rescanWifi();
+            }
+        }
+
+        RowLayout {
+            id: rescanBtn
+
+            anchors.centerIn: parent
+            spacing: Appearance.spacing.small
+            opacity: Network.scanning ? 0 : 1
+
+            MaterialIcon {
+                id: scanIcon
+
+                animate: true
+                text: "wifi_find"
+                color: Colours.palette.m3onPrimaryContainer
+            }
+
+            StyledText {
+                text: qsTr("Rescan networks")
+                color: Colours.palette.m3onPrimaryContainer
+            }
+
+            Behavior on opacity {
+                Anim {}
+            }
+        }
+
+        StyledBusyIndicator {
+            anchors.centerIn: parent
+            strokeWidth: Appearance.padding.small / 2
+            bgColour: "transparent"
+            implicitHeight: parent.implicitHeight - Appearance.padding.smaller * 2
+            running: Network.scanning
+        }
+    }
+
+    // Reset connecting state when network changes
+    Connections {
+        target: Network
+
+        function onActiveChanged(): void {
+            if (Network.active && root.connectingToSsid === Network.active.ssid) {
+                root.connectingToSsid = "";
+            }
+        }
+
+        function onScanningChanged(): void {
+            if (!Network.scanning)
+                scanIcon.rotation = 0;
+        }
+    }
+
+    component Toggle: RowLayout {
+        required property string label
+        property alias checked: toggle.checked
+        property alias toggle: toggle
+
+        Layout.fillWidth: true
+        Layout.rightMargin: Appearance.padding.small
+        spacing: Appearance.spacing.normal
+
+        StyledText {
+            Layout.fillWidth: true
+            text: parent.label
+            visible: parent.label !== ""
+        }
+
+        StyledSwitch {
+            id: toggle
+        }
+    }
+}
