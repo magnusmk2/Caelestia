@@ -1,0 +1,15 @@
+# Global ownership
+* @magnusmk2
+
+# Magnus's custom enhancements - require review
+services/Network.qml @magnusmk2
+services/BitDepth.qml @magnusmk2
+modules/bar/popouts/Monitor.qml @magnusmk2
+
+# Critical configuration files
+flake.nix @magnusmk2
+shell.qml @magnusmk2
+config/ @magnusmk2
+
+# GitHub workflows and repository configuration
+.github/ @magnusmk2
