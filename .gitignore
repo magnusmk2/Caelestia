@@ -2,3 +2,42 @@
 /result
 /.qmlls.ini
 build/
+
+# Pre-commit and Node.js
+node_modules/
+.cache/
+*.log
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build artifacts
+dist/
+*.o
+*.so
+*.dylib
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+
+# Backup files
+*.backup
+*.bak
+
+# Pre-commit cache
+.pre-commit-cache/
