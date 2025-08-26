@@ -2,6 +2,15 @@
 
 This repository uses [pre-commit](https://pre-commit.com/) to ensure code quality and consistency before commits reach the repository.
 
+## 🎯 **Research-Based Best Practices**
+
+This configuration follows modern pre-commit best practices based on:
+
+- Official pre-commit documentation (2024)
+- Real-world Qt/QML projects (e.g., Zrythm)
+- Industry standards for code quality automation
+- Performance optimization for development workflows
+
 ## 🚀 Quick Setup
 
 Run the setup script to install and configure everything:

@@ -9,6 +9,6 @@ pkgs.app2unit.overrideAttrs (final: prev: rec {
     owner = "Vladimir-csp";
     repo = "app2unit";
     tag = "v${version}";
-    hash = "sha256-7eEVjgs+8k+/NLteSBKgn4gPaPLHC+3Uzlmz6XB0930=";
+    hash = "sha256-7eEVjgs+8k+/NLteSBKgn4gPaPLHC+3Uzlmz6XB0930="; # pragma: allowlist secret
   };
 })

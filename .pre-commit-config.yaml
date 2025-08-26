@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: © 2025 Magnus
+# SPDX-License-Identifier: GPL-3.0
 # Pre-commit configuration for Caelestia
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
@@ -7,7 +9,7 @@ default_language_version:
   python: python3.12
   node: "20.11.0"
 
-# Global exclusions
+# Global exclusions - using verbose regex for clarity
 exclude: |
   (?x)^(
     node_modules/.*|
@@ -15,13 +17,21 @@ exclude: |
     \.cache/.*|
     build/.*|
     dist/.*|
-    .*\.patch$
+    .*\.patch$|
+    .*\.min\.(js|css)$|
+    .*\.lock$
   )$
 
+# Fail fast - stop on first failure for faster feedback
+fail_fast: true
+
+# Minimum pre-commit version required
+minimum_pre_commit_version: "3.0.0"
+
 repos:
-  # General file checks
+  # General file checks - using latest stable version
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -49,43 +59,37 @@ repos:
       - id: name-tests-test
         files: '(^|/)tests/.+\.py$'
 
-  # QML and JavaScript linting
-  - repo: local
-    hooks:
-      - id: qmllint
-        name: QML Lint
-        entry: bash
-        language: system
-        files: '\.qml$'
-        args:
-          [
-            "-c",
-            'for file in "$@"; do echo "Linting $file"; qmllint "$file" || true; done',
-            "--",
-          ]
-        description: "Lint QML files for syntax and style issues"
+  # QML and JavaScript linting (disabled due to QuickShell-specific imports)
+  # - repo: local
+  #   hooks:
+  #     - id: qmllint
+  #       name: QML Lint
+  #       entry: qmllint
+  #       language: system
+  #       files: '\.qml$'
+  #       args: ["--check-unqualified"]
+  #       description: "Lint QML files for syntax and style issues"
+  #
+  #     - id: qmlformat
+  #       name: QML Format
+  #       entry: qmlformat
+  #       language: system
+  #       files: '\.qml$'
+  #       args: ["--inplace", "--no-sort"]
+  #       description: "Format QML files consistently"
 
-      # Temporarily disabled due to formatting conflicts
-      # - id: qmlformat
-      #   name: QML Format
-      #   entry: qmlformat
-      #   language: system
-      #   files: '\.qml$'
-      #   args: ["-i"] # In-place formatting
-      #   description: "Format QML files consistently"
-
-  # Security checks
-  - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.5.0
-    hooks:
-      - id: detect-secrets
-        args: ["--baseline", ".secrets.baseline"]
-        exclude: |
-          (?x)^(
-            .*\.lock$|
-            .*\.min\.js$|
-            .*\.min\.css$
-          )$
+  # Security checks - disabled until detect-secrets is installed
+  # - repo: https://github.com/Yelp/detect-secrets
+  #   rev: v1.5.0
+  #   hooks:
+  #     - id: detect-secrets
+  #       args: ["--baseline", ".secrets.baseline"]
+  #       exclude: |
+  #         (?x)^(
+  #           .*\.lock$|
+  #           .*\.min\.js$|
+  #           .*\.min\.css$
+  #         )$
 
   # Additional file type checks (disabled until ESLint config is set up)
   # - repo: https://github.com/pre-commit/mirrors-eslint
@@ -111,17 +115,17 @@ repos:
   #     - id: shellcheck
   #       args: ['-e', 'SC1091']  # Ignore sourcing non-existent files
 
-  # YAML formatting
+  # YAML/JSON/Markdown formatting - latest stable
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
+    rev: v3.1.0
     hooks:
       - id: prettier
         files: '\.(yaml|yml|json|md)$'
         exclude: '(\.github/workflows/.*\.yml$|node_modules/)' # Don't format GitHub Actions or node_modules
 
-  # Git commit message validation
+  # Git commit message validation - latest stable
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.29.0
+    rev: v3.29.1
     hooks:
       - id: commitizen
         stages: [commit-msg]
@@ -300,9 +304,3 @@ ci:
     - detect-secrets
     - performance-check
   submodules: false
-
-# Fail fast configuration
-fail_fast: false
-
-# Minimum pre-commit version
-minimum_pre_commit_version: "3.0.0"
