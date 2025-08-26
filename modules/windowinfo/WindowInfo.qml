@@ -1,10 +1,10 @@
-import qs.components
-import qs.services
-import qs.config
-import Quickshell
-import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
+import Quickshell.Hyprland
+import qs.components
+import qs.config
+import qs.services
 
 Item {
     id: root
@@ -20,7 +20,6 @@ Item {
 
         anchors.fill: parent
         anchors.margins: Appearance.padding.large
-
         spacing: Appearance.spacing.normal
 
         Preview {
@@ -30,26 +29,24 @@ Item {
 
         ColumnLayout {
             spacing: Appearance.spacing.normal
-
             Layout.preferredWidth: Config.winfo.sizes.detailsWidth
             Layout.fillHeight: true
 
             StyledRect {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
                 color: Colours.tPalette.m3surfaceContainer
                 radius: Appearance.rounding.normal
 
                 Details {
                     client: root.client
                 }
+
             }
 
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: buttons.implicitHeight
-
                 color: Colours.tPalette.m3surfaceContainer
                 radius: Appearance.rounding.normal
 
@@ -58,7 +55,11 @@ Item {
 
                     client: root.client
                 }
+
             }
+
         }
+
     }
+
 }

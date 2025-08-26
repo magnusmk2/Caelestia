@@ -1,26 +1,27 @@
-import qs.components
-import qs.services
-import qs.config
+import QtQuick
 import Quickshell
 import Quickshell.Widgets
-import QtQuick
+import qs.components
+import qs.config
+import qs.services
 
 Item {
+    // implicitWidth: 300
+    // implicitHeight: 100
+    // Rectangle {
+    //     anchors.fill: parent
+    // }
+
     id: root
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     anchors.right: parent.right
 
-    // implicitWidth: 300
-    // implicitHeight: 100
-
-    // Rectangle {
-    //     anchors.fill: parent
-    // }
-
     Behavior on implicitHeight {
-        Anim {}
+        Anim {
+        }
+
     }
 
     component Anim: NumberAnimation {
@@ -28,4 +29,5 @@ Item {
         easing.type: Easing.BezierSpline
         easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
     }
+
 }

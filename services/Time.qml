@@ -1,6 +1,5 @@
-pragma Singleton
-
 import Quickshell
+pragma Singleton
 
 Singleton {
     property alias enabled: clock.enabled
@@ -9,12 +8,14 @@ Singleton {
     readonly property int minutes: clock.minutes
     readonly property int seconds: clock.seconds
 
-    function format(fmt: string): string {
+    function format(fmt: string) : string {
         return Qt.formatDateTime(clock.date, fmt);
     }
 
     SystemClock {
         id: clock
+
         precision: SystemClock.Seconds
     }
+
 }

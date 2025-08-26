@@ -10,5 +10,7 @@ ListView {
         Anim {
             properties: "x,y"
         }
+
     }
+
 }

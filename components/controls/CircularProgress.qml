@@ -1,7 +1,7 @@
-import qs.services
-import qs.config
 import QtQuick
 import QtQuick.Shapes
+import qs.config
+import qs.services
 
 Shape {
     id: root
@@ -13,7 +13,6 @@ Shape {
     property int spacing: Appearance.spacing.small
     property color fgColour: Colours.palette.m3primary
     property color bgColour: Colours.palette.m3secondaryContainer
-
     readonly property real size: Math.min(width, height)
     readonly property real arcRadius: (size - padding - strokeWidth) / 2
     readonly property real vValue: value || 1 / 360
@@ -43,7 +42,9 @@ Shape {
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.anim.curves.standard
             }
+
         }
+
     }
 
     ShapePath {
@@ -67,6 +68,9 @@ Shape {
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.anim.curves.standard
             }
+
         }
+
     }
+
 }

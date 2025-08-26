@@ -1,8 +1,8 @@
-import qs.components
-import qs.services
-import qs.config
 import QtQuick
 import QtQuick.Shapes
+import qs.components
+import qs.config
+import qs.services
 
 ShapePath {
     id: root
@@ -61,6 +61,9 @@ ShapePath {
     }
 
     Behavior on fillColor {
-        CAnim {}
+        CAnim {
+        }
+
     }
+
 }

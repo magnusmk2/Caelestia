@@ -1,6 +1,5 @@
-pragma Singleton
-
 import Quickshell
+pragma Singleton
 
 Singleton {
     property int itemWidth: 103

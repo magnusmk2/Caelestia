@@ -1,9 +1,9 @@
-import qs.components
-import qs.services
-import qs.config
-import "dash"
-import Quickshell
 import QtQuick.Layouts
+import Quickshell
+import "dash"
+import qs.components
+import qs.config
+import qs.services
 
 GridLayout {
     id: root
@@ -26,6 +26,7 @@ GridLayout {
             visibilities: root.visibilities
             state: root.state
         }
+
     }
 
     Rect {
@@ -34,7 +35,9 @@ GridLayout {
         Layout.preferredWidth: Config.dashboard.sizes.weatherWidth
         Layout.fillHeight: true
 
-        Weather {}
+        Weather {
+        }
+
     }
 
     Rect {
@@ -45,6 +48,7 @@ GridLayout {
         DateTime {
             id: dateTime
         }
+
     }
 
     Rect {
@@ -57,6 +61,7 @@ GridLayout {
         Calendar {
             id: calendar
         }
+
     }
 
     Rect {
@@ -68,6 +73,7 @@ GridLayout {
         Resources {
             id: resources
         }
+
     }
 
     Rect {
@@ -80,10 +86,12 @@ GridLayout {
         Media {
             id: media
         }
+
     }
 
     component Rect: StyledRect {
         radius: Appearance.rounding.small
         color: Colours.tPalette.m3surfaceContainer
     }
+
 }

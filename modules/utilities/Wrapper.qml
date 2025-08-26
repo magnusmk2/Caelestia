@@ -1,6 +1,6 @@
+import QtQuick
 import qs.components
 import qs.config
-import QtQuick
 
 Item {
     id: root
@@ -10,16 +10,6 @@ Item {
     visible: height > 0
     implicitHeight: 0
     implicitWidth: content.implicitWidth
-
-    states: State {
-        name: "visible"
-        when: root.visibility
-
-        PropertyChanges {
-            root.implicitHeight: content.implicitHeight
-        }
-    }
-
     transitions: [
         Transition {
             from: ""
@@ -31,6 +21,7 @@ Item {
                 duration: Appearance.anim.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
             }
+
         },
         Transition {
             from: "visible"
@@ -41,10 +32,22 @@ Item {
                 property: "implicitHeight"
                 easing.bezierCurve: Appearance.anim.curves.emphasized
             }
+
         }
     ]
 
     Content {
         id: content
     }
+
+    states: State {
+        name: "visible"
+        when: root.visibility
+
+        PropertyChanges {
+            root.implicitHeight: content.implicitHeight
+        }
+
+    }
+
 }

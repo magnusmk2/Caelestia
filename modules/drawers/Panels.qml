@@ -1,13 +1,13 @@
-import qs.config
-import qs.modules.osd as Osd
-import qs.modules.notifications as Notifications
-import qs.modules.session as Session
-import qs.modules.launcher as Launcher
-import qs.modules.dashboard as Dashboard
-import qs.modules.bar.popouts as BarPopouts
-import qs.modules.utilities as Utilities
-import Quickshell
 import QtQuick
+import Quickshell
+import qs.config
+import qs.modules.bar.popouts as BarPopouts
+import qs.modules.dashboard as Dashboard
+import qs.modules.launcher as Launcher
+import qs.modules.notifications as Notifications
+import qs.modules.osd as Osd
+import qs.modules.session as Session
+import qs.modules.utilities as Utilities
 
 Item {
     id: root
@@ -15,7 +15,6 @@ Item {
     required property ShellScreen screen
     required property PersistentProperties visibilities
     required property Item bar
-
     readonly property Osd.Wrapper osd: osd
     readonly property Notifications.Wrapper notifications: notifications
     readonly property Session.Wrapper session: session
@@ -34,7 +33,6 @@ Item {
         clip: root.visibilities.session
         screen: root.screen
         visibility: root.visibilities.osd
-
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         anchors.rightMargin: session.width
@@ -45,7 +43,6 @@ Item {
 
         visibilities: root.visibilities
         panel: root
-
         anchors.top: parent.top
         anchors.right: parent.right
     }
@@ -54,7 +51,6 @@ Item {
         id: session
 
         visibilities: root.visibilities
-
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
     }
@@ -64,7 +60,6 @@ Item {
 
         visibilities: root.visibilities
         panels: root
-
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
     }
@@ -73,7 +68,6 @@ Item {
         id: dashboard
 
         visibilities: root.visibilities
-
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
     }
@@ -82,7 +76,6 @@ Item {
         id: popouts
 
         screen: root.screen
-
         x: isDetached ? (root.width - nonAnimWidth) / 2 : 0
         y: {
             if (isDetached)
@@ -92,6 +85,7 @@ Item {
             const diff = root.height - Math.floor(off + nonAnimHeight);
             if (diff < 0)
                 return off + diff;
+
             return Math.max(off, 0);
         }
     }
@@ -100,8 +94,8 @@ Item {
         id: utilities
 
         visibility: root.visibilities.utilities
-
         anchors.bottom: parent.bottom
         anchors.right: parent.right
     }
+
 }

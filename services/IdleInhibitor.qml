@@ -11,12 +11,12 @@ Singleton {
     Process {
         id: idleInhibitProc
         running: root.enabled
-        command: [Quickshell.env("CAELESTIA_II_PATH") || "/usr/lib/caelestia/inhibit_idle"] 
+        command: [Quickshell.env("CAELESTIA_II_PATH") || "/usr/lib/caelestia/inhibit_idle"]
     }
 
     IpcHandler {
         target: "idleInhibitor"
-        
+
         function isEnabled(): bool {
             return root.enabled;
         }
@@ -24,7 +24,7 @@ Singleton {
         function toggle(): void {
             root.enabled = !root.enabled;
         }
-        
+
         function enable(): void {
             root.enabled = true;
         }

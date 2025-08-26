@@ -1,8 +1,8 @@
-import qs.components
-import qs.services
-import qs.config
-import Quickshell
 import QtQuick
+import Quickshell
+import qs.components
+import qs.config
+import qs.services
 
 Item {
     id: root
@@ -13,16 +13,6 @@ Item {
     visible: width > 0
     implicitWidth: 0
     implicitHeight: content.implicitHeight
-
-    states: State {
-        name: "visible"
-        when: root.visibility && Config.osd.enabled
-
-        PropertyChanges {
-            root.implicitWidth: content.implicitWidth
-        }
-    }
-
     transitions: [
         Transition {
             from: ""
@@ -33,6 +23,7 @@ Item {
                 property: "implicitWidth"
                 easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
             }
+
         },
         Transition {
             from: "visible"
@@ -43,6 +34,7 @@ Item {
                 property: "implicitWidth"
                 easing.bezierCurve: Appearance.anim.curves.emphasized
             }
+
         }
     ]
 
@@ -51,4 +43,15 @@ Item {
 
         monitor: Brightness.getMonitorForScreen(root.screen)
     }
+
+    states: State {
+        name: "visible"
+        when: root.visibility && Config.osd.enabled
+
+        PropertyChanges {
+            root.implicitWidth: content.implicitWidth
+        }
+
+    }
+
 }

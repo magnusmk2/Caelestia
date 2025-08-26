@@ -10,5 +10,7 @@ Flickable {
         Anim {
             properties: "x,y"
         }
+
     }
+
 }

@@ -7,11 +7,15 @@ JsonObject {
     property int expandThreshold: 20
     property bool actionOnClick: false
     property int groupPreviewNum: 3
-    property Sizes sizes: Sizes {}
+    property Sizes sizes
+
+    sizes: Sizes {
+    }
 
     component Sizes: JsonObject {
         property int width: 400
         property int image: 41
         property int badge: 20
     }
+
 }
