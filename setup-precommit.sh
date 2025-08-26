@@ -1,35 +1,84 @@
 #!/bin/bash
 # Setup script for pre-commit hooks in Caelestia repository
 
-set -e
+set -euo pipefail
+
+# Colors for output
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
+
+# Logging functions
+log_info() { echo -e "${BLUE}ℹ️  $1${NC}"; }
+log_success() { echo -e "${GREEN}✅ $1${NC}"; }
+log_warning() { echo -e "${YELLOW}⚠️  $1${NC}"; }
+log_error() { echo -e "${RED}❌ $1${NC}"; }
 
 echo "🚀 Setting up pre-commit hooks for Caelestia..."
 
 # Check if we're in a git repository
-if [ ! -d ".git" ]; then
-    echo "❌ Error: Not in a git repository"
+if [[ ! -d ".git" ]]; then
+    log_error "Not in a git repository"
     exit 1
 fi
 
-# Install pre-commit if not already installed
-if ! command -v pre-commit &> /dev/null; then
-    echo "📦 Installing pre-commit..."
+# Function to check if command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
 
-    # Try different installation methods
-    if command -v pip &> /dev/null; then
-        pip install --user pre-commit
-    elif command -v pipx &> /dev/null; then
-        pipx install pre-commit
-    elif command -v nix &> /dev/null; then
-        echo "Using Nix to install pre-commit..."
-        nix profile install nixpkgs#pre-commit
+# Function to install with different package managers
+install_package() {
+    local package="$1"
+    local pip_package="${2:-$package}"
+
+    if command_exists pip; then
+        log_info "Installing $package with pip..."
+        pip install --user "$pip_package" # pragma: allowlist secret
+    elif command_exists pipx; then
+        log_info "Installing $package with pipx..."
+        pipx install "$pip_package"
+    elif command_exists nix; then
+        log_info "Installing $package with Nix..."
+        nix profile install "nixpkgs#$package"
+    elif command_exists pacman; then
+        log_info "Installing $package with pacman..."
+        sudo pacman -S "$package" --noconfirm
+    elif command_exists apt; then
+        log_info "Installing $package with apt..."
+        sudo apt update && sudo apt install -y "$package"
     else
-        echo "❌ Error: Could not find pip, pipx, or nix to install pre-commit"
-        echo "Please install pre-commit manually: https://pre-commit.com/#installation"
+        log_error "No supported package manager found for $package"
+        return 1
+    fi
+}
+
+# Install pre-commit if not already installed
+if ! command_exists pre-commit; then
+    log_info "Installing pre-commit..."
+    if install_package "pre-commit" "pre-commit"; then
+        log_success "pre-commit installed successfully"
+    else
+        log_error "Could not install pre-commit"
+        log_info "Please install manually: https://pre-commit.com/#installation"
         exit 1
     fi
 else
-    echo "✅ pre-commit is already installed"
+    log_success "pre-commit is already installed"
+fi
+
+# Install detect-secrets for security scanning
+if ! command_exists detect-secrets; then
+    log_info "Installing detect-secrets for security scanning..."
+    if install_package "detect-secrets" "detect-secrets"; then
+        log_success "detect-secrets installed successfully"
+    else
+        log_warning "Could not install detect-secrets - security scanning will be skipped"
+    fi
+else
+    log_success "detect-secrets is already installed"
 fi
 
 # Install QML tools if not available

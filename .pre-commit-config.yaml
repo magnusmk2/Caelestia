@@ -2,15 +2,29 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
+# Global configuration
+default_language_version:
+  python: python3.12
+  node: "20.11.0"
+
+# Global exclusions
+exclude: |
+  (?x)^(
+    node_modules/.*|
+    \.git/.*|
+    \.cache/.*|
+    build/.*|
+    dist/.*|
+    .*\.patch$
+  )$
+
 repos:
   # General file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
       - id: trailing-whitespace
-        exclude: '(\.patch$|node_modules/)'
       - id: end-of-file-fixer
-        exclude: '(\.patch$|node_modules/)'
       - id: check-yaml
         args: ["--unsafe"] # Allow custom YAML tags
       - id: check-json
@@ -25,6 +39,15 @@ repos:
         args: ["--fix=lf"]
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
+      - id: check-ast
+        files: '\.py$'
+      - id: check-builtin-literals
+      - id: check-docstring-first
+        files: '\.py$'
+      - id: debug-statements
+        files: '\.py$'
+      - id: name-tests-test
+        files: '(^|/)tests/.+\.py$'
 
   # QML and JavaScript linting
   - repo: local
@@ -42,13 +65,37 @@ repos:
           ]
         description: "Lint QML files for syntax and style issues"
 
-      - id: qmlformat
-        name: QML Format
-        entry: qmlformat
-        language: system
-        files: '\.qml$'
-        args: ["-i"] # In-place formatting
-        description: "Format QML files consistently"
+      # Temporarily disabled due to formatting conflicts
+      # - id: qmlformat
+      #   name: QML Format
+      #   entry: qmlformat
+      #   language: system
+      #   files: '\.qml$'
+      #   args: ["-i"] # In-place formatting
+      #   description: "Format QML files consistently"
+
+  # Security checks
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+        exclude: |
+          (?x)^(
+            .*\.lock$|
+            .*\.min\.js$|
+            .*\.min\.css$
+          )$
+
+  # Additional file type checks (disabled until ESLint config is set up)
+  # - repo: https://github.com/pre-commit/mirrors-eslint
+  #   rev: v9.9.1
+  #   hooks:
+  #     - id: eslint
+  #       files: '\.(js|jsx|ts|tsx)$'
+  #       additional_dependencies:
+  #         - eslint@^8.0.0
+  #         - eslint-config-prettier@^8.0.0
 
   # Nix file formatting and validation (disabled - no Nix available)
   # - repo: https://github.com/nix-community/nixpkgs-fmt
@@ -88,29 +135,36 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+        stages: [pre-commit, pre-push]
         args:
+          - -euo
+          - pipefail
           - -c
           - |
+            set -euo pipefail
             echo "🔍 Validating Caelestia project structure..."
 
-            # Check required directories
-            required_dirs=("modules" "services" "components" "config" "utils")
-            for dir in "${required_dirs[@]}"; do
-              if [ ! -d "$dir" ]; then
-                echo "❌ Missing required directory: $dir"
+            # Performance: Check critical files first
+            critical_files=("shell.qml" "flake.nix")
+            for file in "${critical_files[@]}"; do
+              if [[ ! -f "$file" ]]; then
+                echo "❌ Missing critical file: $file"
                 exit 1
               fi
             done
 
-            # Check main shell file
-            if [ ! -f "shell.qml" ]; then
-              echo "❌ Missing main shell.qml file"
-              exit 1
-            fi
+            # Check required directories with better error messages
+            required_dirs=("modules" "services" "components" "config" "utils")
+            missing_dirs=()
+            for dir in "${required_dirs[@]}"; do
+              if [[ ! -d "$dir" ]]; then
+                missing_dirs+=("$dir")
+              fi
+            done
 
-            # Check flake files
-            if [ ! -f "flake.nix" ]; then
-              echo "❌ Missing flake.nix"
+            if [[ ${#missing_dirs[@]} -gt 0 ]]; then
+              echo "❌ Missing required directories: ${missing_dirs[*]}"
+              echo "💡 Hint: These directories are essential for Caelestia structure"
               exit 1
             fi
 
@@ -121,36 +175,104 @@ repos:
         entry: bash
         language: system
         files: '^(services/Network\.qml|services/BitDepth\.qml|modules/bar/popouts/Monitor\.qml)$'
+        stages: [pre-commit]
         args:
+          - -euo
+          - pipefail
           - -c
           - |
+            set -euo pipefail
             echo "🎨 Checking Magnus's custom enhancements..."
 
-            # Check for Network service enhancements
-            if [ -f "services/Network.qml" ]; then
-              if ! grep -q "ethernetConnections" services/Network.qml; then
-                echo "⚠️  Network service may be missing ethernet enhancements"
-                exit 1
+            # Define enhancement patterns for validation
+            declare -A enhancements=(
+              ["services/Network.qml"]="ethernetConnections mullvadConnected"
+              ["services/BitDepth.qml"]="bitDepth"
+              ["modules/bar/popouts/Monitor.qml"]="monitorIdentify"
+            )
+
+            missing_enhancements=()
+
+            # Check Network service enhancements
+            if [[ -f "services/Network.qml" ]]; then
+              for pattern in ethernetConnections mullvadConnected; do
+                if ! grep -q "$pattern" services/Network.qml; then
+                  missing_enhancements+=("Network service: $pattern")
+                fi
+              done
+              [[ ${#missing_enhancements[@]} -eq 0 ]] && echo "✅ Network service enhancements verified"
+            fi
+
+            # Check Monitor management
+            if [[ -f "modules/bar/popouts/Monitor.qml" ]]; then
+              if ! grep -q "monitorData\|refreshing.*monitor" modules/bar/popouts/Monitor.qml; then
+                missing_enhancements+=("Monitor management: core functionality")
+              else
+                echo "✅ Monitor management UI verified"
               fi
+            fi
 
-              if ! grep -q "mullvadConnected" services/Network.qml; then
-                echo "⚠️  Network service may be missing VPN enhancements"
-                exit 1
+            # Check BitDepth service
+            if [[ -f "services/BitDepth.qml" ]]; then
+              if ! grep -q "is10Bit\|currentMode\|toggleScript" services/BitDepth.qml; then
+                missing_enhancements+=("BitDepth service: core functionality")
+              else
+                echo "✅ BitDepth service verified"
               fi
-              echo "✅ Network service enhancements verified"
             fi
 
-            # Check for Monitor management
-            if [ -f "modules/bar/popouts/Monitor.qml" ]; then
-              echo "✅ Monitor management UI verified"
+            # Report any missing enhancements
+            if [[ ${#missing_enhancements[@]} -gt 0 ]]; then
+              echo "⚠️  Missing custom enhancements:"
+              printf "   - %s\n" "${missing_enhancements[@]}"
+              echo "💡 Hint: These are Magnus's custom features that should be preserved"
+              exit 1
             fi
 
-            # Check for BitDepth service
-            if [ -f "services/BitDepth.qml" ]; then
-              echo "✅ BitDepth service verified"
+            echo "✅ All custom enhancements verified!"
+
+      - id: performance-check
+        name: Performance Check
+        entry: bash
+        language: system
+        files: '\.(qml|js)$'
+        stages: [pre-push]
+        args:
+          - -euo
+          - pipefail
+          - -c
+          - |
+            set -euo pipefail
+            echo "⚡ Running performance checks..."
+
+            # Check for performance anti-patterns in QML
+            performance_issues=()
+
+            for file in "$@"; do
+              if [[ "$file" == *.qml ]]; then
+                # Check for common performance issues
+                if grep -q "console\.log\|console\.debug" "$file"; then
+                  performance_issues+=("$file: Contains console logging (impacts performance)")
+                fi
+
+                if grep -q "Timer.*interval.*[0-9]\{1,2\}[^0-9]" "$file"; then
+                  performance_issues+=("$file: Very short timer intervals detected")
+                fi
+
+                if grep -q "anchors\.fill.*parent.*anchors\." "$file"; then
+                  performance_issues+=("$file: Complex anchor chains detected")
+                fi
+              fi
+            done
+
+            if [[ ${#performance_issues[@]} -gt 0 ]]; then
+              echo "⚠️  Performance issues detected:"
+              printf "   - %s\n" "${performance_issues[@]}"
+              echo "💡 Consider optimizing these patterns for better performance"
+              # Don't fail, just warn
             fi
 
-            echo "✅ Custom enhancements check completed!"
+            echo "✅ Performance check completed"
 
       # Disabled due to Nix not being available
       # - id: nix-flake-check
@@ -165,12 +287,22 @@ repos:
 # Configuration for specific hooks
 ci:
   autofix_commit_msg: |
-    [pre-commit.ci] auto fixes from pre-commit hooks
+    style: auto fixes from pre-commit hooks
 
-    for more information, see https://pre-commit.ci
+    Applied automatic formatting and linting fixes.
+
+    Co-authored-by: pre-commit-ci[bot] <66853113+pre-commit-ci[bot]@users.noreply.github.com>
   autofix_prs: true
   autoupdate_branch: ""
-  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
+  autoupdate_commit_msg: "chore: pre-commit autoupdate"
   autoupdate_schedule: weekly
-  skip: []
+  skip:
+    - detect-secrets
+    - performance-check
   submodules: false
+
+# Fail fast configuration
+fail_fast: false
+
+# Minimum pre-commit version
+minimum_pre_commit_version: "3.0.0"
