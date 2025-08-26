@@ -9,6 +9,9 @@ MultiEffect {
     brightness: 1 - sourceColor.hslLightness
 
     Behavior on colorizationColor {
-        CAnim {}
+        CAnim {
+        }
+
     }
+
 }

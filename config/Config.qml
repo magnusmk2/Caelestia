@@ -1,8 +1,7 @@
-pragma Singleton
-
-import qs.utils
 import Quickshell
 import Quickshell.Io
+import qs.utils
+pragma Singleton
 
 Singleton {
     id: root
@@ -31,21 +30,69 @@ Singleton {
         JsonAdapter {
             id: adapter
 
-            property AppearanceConfig appearance: AppearanceConfig {}
-            property GeneralConfig general: GeneralConfig {}
-            property BackgroundConfig background: BackgroundConfig {}
-            property BarConfig bar: BarConfig {}
-            property BorderConfig border: BorderConfig {}
-            property DashboardConfig dashboard: DashboardConfig {}
-            property ControlCenterConfig controlCenter: ControlCenterConfig {}
-            property LauncherConfig launcher: LauncherConfig {}
-            property NotifsConfig notifs: NotifsConfig {}
-            property OsdConfig osd: OsdConfig {}
-            property SessionConfig session: SessionConfig {}
-            property WInfoConfig winfo: WInfoConfig {}
-            property LockConfig lock: LockConfig {}
-            property ServiceConfig services: ServiceConfig {}
-            property UserPaths paths: UserPaths {}
+            property AppearanceConfig appearance
+            property GeneralConfig general
+            property BackgroundConfig background
+            property BarConfig bar
+            property BorderConfig border
+            property DashboardConfig dashboard
+            property ControlCenterConfig controlCenter
+            property LauncherConfig launcher
+            property NotifsConfig notifs
+            property OsdConfig osd
+            property SessionConfig session
+            property WInfoConfig winfo
+            property LockConfig lock
+            property ServiceConfig services
+            property UserPaths paths
+
+            appearance: AppearanceConfig {
+            }
+
+            general: GeneralConfig {
+            }
+
+            background: BackgroundConfig {
+            }
+
+            bar: BarConfig {
+            }
+
+            border: BorderConfig {
+            }
+
+            dashboard: DashboardConfig {
+            }
+
+            controlCenter: ControlCenterConfig {
+            }
+
+            launcher: LauncherConfig {
+            }
+
+            notifs: NotifsConfig {
+            }
+
+            osd: OsdConfig {
+            }
+
+            session: SessionConfig {
+            }
+
+            winfo: WInfoConfig {
+            }
+
+            lock: LockConfig {
+            }
+
+            services: ServiceConfig {
+            }
+
+            paths: UserPaths {
+            }
+
         }
+
     }
+
 }

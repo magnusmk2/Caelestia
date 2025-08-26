@@ -1,7 +1,7 @@
-import qs.components
-import qs.services
-import qs.config
 import QtQuick
+import qs.components
+import qs.config
+import qs.services
 
 Item {
     implicitWidth: timeText.implicitWidth + Appearance.padding.large * 2
@@ -15,4 +15,5 @@ Item {
         font.pointSize: Appearance.font.size.extraLarge
         font.bold: true
     }
+
 }

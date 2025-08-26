@@ -1,21 +1,18 @@
 import ".."
 import "../effects"
-import qs.services
-import qs.config
 import QtQuick
+import qs.config
+import qs.services
 
 StyledRect {
     required property int extra
 
     anchors.right: parent.right
     anchors.margins: Appearance.padding.normal
-
     color: Colours.palette.m3tertiary
     radius: Appearance.rounding.small
-
     implicitWidth: count.implicitWidth + Appearance.padding.normal * 2
     implicitHeight: count.implicitHeight + Appearance.padding.small * 2
-
     opacity: extra > 0 ? 1 : 0
     scale: extra > 0 ? 1 : 0.5
 
@@ -40,6 +37,7 @@ StyledRect {
         Anim {
             duration: Appearance.anim.durations.expressiveFastSpatial
         }
+
     }
 
     Behavior on scale {
@@ -47,5 +45,7 @@ StyledRect {
             duration: Appearance.anim.durations.expressiveFastSpatial
             easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
         }
+
     }
+
 }

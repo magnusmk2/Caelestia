@@ -1,10 +1,10 @@
+import QtQuick
+import QtQuick.Layouts
 import qs.components
 import qs.components.controls
 import qs.components.misc
-import qs.services
 import qs.config
-import QtQuick
-import QtQuick.Layouts
+import qs.services
 
 GridLayout {
     id: root
@@ -12,7 +12,6 @@ GridLayout {
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.margins: Appearance.padding.large
-
     rowSpacing: Appearance.spacing.large
     columnSpacing: Appearance.spacing.large
     rows: 2
@@ -59,7 +58,6 @@ GridLayout {
 
         Layout.fillWidth: true
         implicitHeight: width
-
         color: Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
         radius: Appearance.rounding.large
 
@@ -88,6 +86,9 @@ GridLayout {
             Anim {
                 duration: Appearance.anim.durations.large
             }
+
         }
+
     }
+
 }

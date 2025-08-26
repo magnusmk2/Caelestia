@@ -5,7 +5,10 @@ JsonObject {
     property bool showOnHover: true
     property int mediaUpdateInterval: 500
     property int dragThreshold: 50
-    property Sizes sizes: Sizes {}
+    property Sizes sizes
+
+    sizes: Sizes {
+    }
 
     component Sizes: JsonObject {
         readonly property int tabIndicatorHeight: 3
@@ -22,4 +25,5 @@ JsonObject {
         readonly property int mediaVisualiserSize: 80
         readonly property int resourceSize: 200
     }
+
 }

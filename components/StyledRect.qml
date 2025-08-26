@@ -6,6 +6,9 @@ Rectangle {
     color: "transparent"
 
     Behavior on color {
-        CAnim {}
+        CAnim {
+        }
+
     }
+
 }

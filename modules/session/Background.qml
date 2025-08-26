@@ -1,8 +1,8 @@
-import qs.components
-import qs.services
-import qs.config
 import QtQuick
 import QtQuick.Shapes
+import qs.components
+import qs.config
+import qs.services
 
 ShapePath {
     id: root
@@ -21,10 +21,12 @@ ShapePath {
         radiusX: Math.min(root.rounding, root.wrapper.width)
         radiusY: root.rounding
     }
+
     PathLine {
         relativeX: -(root.wrapper.width - root.roundingX * 2)
         relativeY: 0
     }
+
     PathArc {
         relativeX: -root.roundingX
         relativeY: root.rounding
@@ -32,10 +34,12 @@ ShapePath {
         radiusY: root.rounding
         direction: PathArc.Counterclockwise
     }
+
     PathLine {
         relativeX: 0
         relativeY: root.wrapper.height - root.rounding * 2
     }
+
     PathArc {
         relativeX: root.roundingX
         relativeY: root.rounding
@@ -43,10 +47,12 @@ ShapePath {
         radiusY: root.rounding
         direction: PathArc.Counterclockwise
     }
+
     PathLine {
         relativeX: root.wrapper.width - root.roundingX * 2
         relativeY: 0
     }
+
     PathArc {
         relativeX: root.roundingX
         relativeY: root.rounding
@@ -55,6 +61,9 @@ ShapePath {
     }
 
     Behavior on fillColor {
-        CAnim {}
+        CAnim {
+        }
+
     }
+
 }

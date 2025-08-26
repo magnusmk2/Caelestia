@@ -1,15 +1,14 @@
+import QtQuick
 import qs.components
 import qs.components.misc
-import qs.services
 import qs.config
-import QtQuick
+import qs.services
 
 Row {
     id: root
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-
     padding: Appearance.padding.large
     spacing: Appearance.spacing.normal
 
@@ -52,9 +51,7 @@ Row {
             anchors.top: parent.top
             anchors.bottom: icon.top
             anchors.bottomMargin: Appearance.spacing.small
-
             implicitWidth: Config.dashboard.sizes.resourceProgessThickness
-
             color: Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
             radius: Appearance.rounding.full
 
@@ -63,17 +60,16 @@ Row {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 implicitHeight: res.value * parent.height
-
                 color: res.colour
                 radius: Appearance.rounding.full
             }
+
         }
 
         MaterialIcon {
             id: icon
 
             anchors.bottom: parent.bottom
-
             text: res.icon
             color: res.colour
         }
@@ -82,6 +78,9 @@ Row {
             Anim {
                 duration: Appearance.anim.durations.large
             }
+
         }
+
     }
+
 }

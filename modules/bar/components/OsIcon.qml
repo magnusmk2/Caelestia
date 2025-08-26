@@ -1,6 +1,6 @@
 import qs.components.effects
-import qs.services
 import qs.config
+import qs.services
 import qs.utils
 
 ColouredIcon {

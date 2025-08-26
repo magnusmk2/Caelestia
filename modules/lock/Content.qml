@@ -1,8 +1,8 @@
-import qs.components
-import qs.services
-import qs.config
 import QtQuick
 import QtQuick.Layouts
+import qs.components
+import qs.config
+import qs.services
 
 RowLayout {
     id: root
@@ -18,7 +18,6 @@ RowLayout {
         StyledRect {
             Layout.fillWidth: true
             implicitHeight: weather.implicitHeight
-
             topLeftRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
@@ -28,22 +27,23 @@ RowLayout {
 
                 rootHeight: root.height
             }
+
         }
 
         StyledRect {
             Layout.fillWidth: true
             Layout.fillHeight: true
-
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
 
-            Fetch {}
+            Fetch {
+            }
+
         }
 
         StyledClippingRect {
             Layout.fillWidth: true
             implicitHeight: media.implicitHeight
-
             bottomLeftRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
@@ -53,7 +53,9 @@ RowLayout {
 
                 lock: root.lock
             }
+
         }
+
     }
 
     Center {
@@ -67,7 +69,6 @@ RowLayout {
         StyledRect {
             Layout.fillWidth: true
             implicitHeight: resources.implicitHeight
-
             topRightRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
@@ -75,12 +76,12 @@ RowLayout {
             Resources {
                 id: resources
             }
+
         }
 
         StyledRect {
             Layout.fillWidth: true
             Layout.fillHeight: true
-
             bottomRightRadius: Appearance.rounding.large
             radius: Appearance.rounding.small
             color: Colours.tPalette.m3surfaceContainer
@@ -88,6 +89,9 @@ RowLayout {
             NotifDock {
                 lock: root.lock
             }
+
         }
+
     }
+
 }

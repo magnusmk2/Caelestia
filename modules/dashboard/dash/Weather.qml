@@ -1,16 +1,14 @@
-import qs.components
-import qs.services
-import qs.config
-import qs.utils
 import QtQuick
+import qs.components
+import qs.config
+import qs.services
+import qs.utils
 
 Item {
     id: root
 
     anchors.centerIn: parent
-
     implicitWidth: icon.implicitWidth + info.implicitWidth + info.anchors.leftMargin
-
     Component.onCompleted: Weather.reload()
 
     MaterialIcon {
@@ -18,7 +16,6 @@ Item {
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-
         animate: true
         text: Weather.icon
         color: Colours.palette.m3secondary
@@ -31,12 +28,10 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: icon.right
         anchors.leftMargin: Appearance.spacing.large
-
         spacing: Appearance.spacing.small
 
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
-
             animate: true
             text: Weather.temp
             color: Colours.palette.m3primary
@@ -46,12 +41,12 @@ Item {
 
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
-
             animate: true
             text: Weather.description
-
             elide: Text.ElideRight
             width: Math.min(implicitWidth, root.parent.width - icon.implicitWidth - info.anchors.leftMargin - Appearance.padding.large * 2)
         }
+
     }
+
 }

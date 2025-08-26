@@ -13,9 +13,9 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 ## Components
 
--   Widgets: [`Quickshell`](https://quickshell.outfoxxed.me)
--   Window manager: [`Hyprland`](https://hyprland.org)
--   Dots: [`caelestia`](https://github.com/caelestia-dots)
+- Widgets: [`Quickshell`](https://quickshell.outfoxxed.me)
+- Window manager: [`Hyprland`](https://hyprland.org)
+- Dots: [`caelestia`](https://github.com/caelestia-dots)
 
 ## Installation
 
@@ -36,25 +36,25 @@ like [`yay`](https://github.com/Jguer/yay) or manually downloading the PKGBUILD 
 
 Dependencies:
 
--   [`caelestia-cli`](https://github.com/caelestia-dots/cli)
--   [`quickshell-git`](https://quickshell.outfoxxed.me) - this has to be the git version, not the latest tagged version
--   [`ddcutil`](https://github.com/rockowitz/ddcutil)
--   [`brightnessctl`](https://github.com/Hummer12007/brightnessctl)
--   [`app2unit`](https://github.com/Vladimir-csp/app2unit)
--   [`cava`](https://github.com/karlstav/cava)
--   [`networkmanager`](https://networkmanager.dev)
--   [`lm-sensors`](https://github.com/lm-sensors/lm-sensors)
--   [`fish`](https://github.com/fish-shell/fish-shell)
--   [`aubio`](https://github.com/aubio/aubio)
--   [`libpipewire`](https://pipewire.org)
--   `glibc`
--   `qt6-declarative`
--   `gcc-libs`
--   [`material-symbols`](https://fonts.google.com/icons)
--   [`caskaydia-cove-nerd`](https://www.nerdfonts.com/font-downloads)
--   [`grim`](https://gitlab.freedesktop.org/emersion/grim)
--   [`swappy`](https://github.com/jtheoof/swappy)
--   [`libqalculate`](https://github.com/Qalculate/libqalculate)
+- [`caelestia-cli`](https://github.com/caelestia-dots/cli)
+- [`quickshell-git`](https://quickshell.outfoxxed.me) - this has to be the git version, not the latest tagged version
+- [`ddcutil`](https://github.com/rockowitz/ddcutil)
+- [`brightnessctl`](https://github.com/Hummer12007/brightnessctl)
+- [`app2unit`](https://github.com/Vladimir-csp/app2unit)
+- [`cava`](https://github.com/karlstav/cava)
+- [`networkmanager`](https://networkmanager.dev)
+- [`lm-sensors`](https://github.com/lm-sensors/lm-sensors)
+- [`fish`](https://github.com/fish-shell/fish-shell)
+- [`aubio`](https://github.com/aubio/aubio)
+- [`libpipewire`](https://pipewire.org)
+- `glibc`
+- `qt6-declarative`
+- `gcc-libs`
+- [`material-symbols`](https://fonts.google.com/icons)
+- [`caskaydia-cove-nerd`](https://www.nerdfonts.com/font-downloads)
+- [`grim`](https://gitlab.freedesktop.org/emersion/grim)
+- [`swappy`](https://github.com/jtheoof/swappy)
+- [`libqalculate`](https://github.com/Qalculate/libqalculate)
 
 To install the shell manually, install all dependencies and clone this repo to `$XDG_CONFIG_HOME/quickshell/caelestia`.
 Then compile the beat detector and install it to `/usr/lib/caelestia/beat_detector`.
@@ -145,7 +145,7 @@ git pull
 
 ## Configuring
 
-All configuration options should be put in `~/.config/caelestia/shell.json`. This file is *not* created by
+All configuration options should be put in `~/.config/caelestia/shell.json`. This file is _not_ created by
 default, you must create it manually.
 
 > [!NOTE]
@@ -157,191 +157,193 @@ default, you must create it manually.
 
 ```json
 {
-    "appearance": {
-        "anim": {
-            "durations": {
-                "scale": 1
-            }
-        },
-        "font": {
-            "family": {
-                "material": "Material Symbols Rounded",
-                "mono": "CaskaydiaCove NF",
-                "sans": "Rubik"
-            },
-            "size": {
-                "scale": 1
-            }
-        },
-        "padding": {
-            "scale": 1
-        },
-        "rounding": {
-        	"scale": 1
-        },
-        "spacing": {
-            "scale": 1
-        },
-        "transparency": {
-            "enabled": false,
-            "base": 0.85,
-            "layers": 0.4
-        }
+  "appearance": {
+    "anim": {
+      "durations": {
+        "scale": 1
+      }
     },
-    "general": {
-        "apps": {
-            "terminal": ["foot"],
-            "audio": ["pavucontrol"]
-        }
+    "font": {
+      "family": {
+        "material": "Material Symbols Rounded",
+        "mono": "CaskaydiaCove NF",
+        "sans": "Rubik"
+      },
+      "size": {
+        "scale": 1
+      }
     },
-    "background": {
-        "desktopClock": {
-            "enabled": false
-        },
-        "enabled": true,
-        "visualiser": {
-            "enabled": true,
-            "autoHide": true,
-            "rounding": 1,
-            "spacing": 1
-        }
+    "padding": {
+      "scale": 1
     },
-    "bar": {
-        "dragThreshold": 20,
-        "entries": [
-        	{
-   	            "id": "logo",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "workspaces",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "spacer",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "activeWindow",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "spacer",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "tray",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "clock",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "statusIcons",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "power",
-   	            "enabled": true
-   	        },
-   	        {
-   	            "id": "idleInhibitor",
-   	            "enabled": false
-   	        }
-        ],
-        "persistent": true,
-        "showOnHover": true,
-        "status": {
-            "showAudio": false,
-            "showBattery": true,
-            "showBluetooth": true,
-            "showKbLayout": false,
-            "showNetwork": true
-        },
-        "tray": {
-            "background": false,
-            "recolour": false
-        },
-        "workspaces": {
-            "activeIndicator": true,
-            "activeLabel": "󰮯",
-            "activeTrail": false,
-            "label": "  ",
-            "occupiedBg": false,
-            "occupiedLabel": "󰮯",
-            "perMonitorWorkspaces": true,
-            "showWindows": true,
-            "shown": 5
-        }
+    "rounding": {
+      "scale": 1
     },
-    "border": {
-        "rounding": 25,
-        "thickness": 10
+    "spacing": {
+      "scale": 1
     },
-    "dashboard": {
-        "enabled": true,
-        "dragThreshold": 50,
-        "mediaUpdateInterval": 500,
-        "showOnHover": true
-    },
-    "launcher": {
-        "actionPrefix": ">",
-        "dragThreshold": 50,
-        "vimKeybinds": false,
-        "enableDangerousActions": false,
-        "maxShown": 8,
-        "maxWallpapers": 9,
-        "specialPrefix": "@",
-        "useFuzzy": {
-            "apps": false,
-            "actions": false,
-            "schemes": false,
-            "variants": false,
-            "wallpapers": false
-        }
-    },
-    "lock": {
-        "recolourLogo": false
-    },
-    "notifs": {
-        "actionOnClick": false,
-        "clearThreshold": 0.3,
-        "defaultExpireTimeout": 5000,
-        "expandThreshold": 20,
-        "expire": false
-    },
-    "osd": {
-        "hideDelay": 2000
-    },
-    "paths": {
-        "mediaGif": "root:/assets/bongocat.gif",
-        "sessionGif": "root:/assets/kurukuru.gif",
-        "wallpaperDir": "~/Pictures/Wallpapers"
-    },
-    "services": {
-        "audioIncrement": 0.1,
-        "defaultPlayer": "Spotify",
-        "gpuType": "",
-        "playerAliases": [{
-            "com.github.th_ch.youtube_music": "YT Music"
-        }],
-        "weatherLocation": "",
-        "useFahrenheit": false,
-        "useTwelveHourClock": false,
-        "smartScheme": true,
-        "visualiserBars": 45
-    },
-    "session": {
-        "dragThreshold": 30,
-        "vimKeybinds": false,
-        "commands": {
-            "logout": ["loginctl", "terminate-user", ""],
-            "shutdown": ["systemctl", "poweroff"],
-            "hibernate": ["systemctl", "hibernate"],
-            "reboot": ["systemctl", "reboot"]
-        }
+    "transparency": {
+      "enabled": false,
+      "base": 0.85,
+      "layers": 0.4
     }
+  },
+  "general": {
+    "apps": {
+      "terminal": ["foot"],
+      "audio": ["pavucontrol"]
+    }
+  },
+  "background": {
+    "desktopClock": {
+      "enabled": false
+    },
+    "enabled": true,
+    "visualiser": {
+      "enabled": true,
+      "autoHide": true,
+      "rounding": 1,
+      "spacing": 1
+    }
+  },
+  "bar": {
+    "dragThreshold": 20,
+    "entries": [
+      {
+        "id": "logo",
+        "enabled": true
+      },
+      {
+        "id": "workspaces",
+        "enabled": true
+      },
+      {
+        "id": "spacer",
+        "enabled": true
+      },
+      {
+        "id": "activeWindow",
+        "enabled": true
+      },
+      {
+        "id": "spacer",
+        "enabled": true
+      },
+      {
+        "id": "tray",
+        "enabled": true
+      },
+      {
+        "id": "clock",
+        "enabled": true
+      },
+      {
+        "id": "statusIcons",
+        "enabled": true
+      },
+      {
+        "id": "power",
+        "enabled": true
+      },
+      {
+        "id": "idleInhibitor",
+        "enabled": false
+      }
+    ],
+    "persistent": true,
+    "showOnHover": true,
+    "status": {
+      "showAudio": false,
+      "showBattery": true,
+      "showBluetooth": true,
+      "showKbLayout": false,
+      "showNetwork": true
+    },
+    "tray": {
+      "background": false,
+      "recolour": false
+    },
+    "workspaces": {
+      "activeIndicator": true,
+      "activeLabel": "󰮯",
+      "activeTrail": false,
+      "label": "  ",
+      "occupiedBg": false,
+      "occupiedLabel": "󰮯",
+      "perMonitorWorkspaces": true,
+      "showWindows": true,
+      "shown": 5
+    }
+  },
+  "border": {
+    "rounding": 25,
+    "thickness": 10
+  },
+  "dashboard": {
+    "enabled": true,
+    "dragThreshold": 50,
+    "mediaUpdateInterval": 500,
+    "showOnHover": true
+  },
+  "launcher": {
+    "actionPrefix": ">",
+    "dragThreshold": 50,
+    "vimKeybinds": false,
+    "enableDangerousActions": false,
+    "maxShown": 8,
+    "maxWallpapers": 9,
+    "specialPrefix": "@",
+    "useFuzzy": {
+      "apps": false,
+      "actions": false,
+      "schemes": false,
+      "variants": false,
+      "wallpapers": false
+    }
+  },
+  "lock": {
+    "recolourLogo": false
+  },
+  "notifs": {
+    "actionOnClick": false,
+    "clearThreshold": 0.3,
+    "defaultExpireTimeout": 5000,
+    "expandThreshold": 20,
+    "expire": false
+  },
+  "osd": {
+    "hideDelay": 2000
+  },
+  "paths": {
+    "mediaGif": "root:/assets/bongocat.gif",
+    "sessionGif": "root:/assets/kurukuru.gif",
+    "wallpaperDir": "~/Pictures/Wallpapers"
+  },
+  "services": {
+    "audioIncrement": 0.1,
+    "defaultPlayer": "Spotify",
+    "gpuType": "",
+    "playerAliases": [
+      {
+        "com.github.th_ch.youtube_music": "YT Music"
+      }
+    ],
+    "weatherLocation": "",
+    "useFahrenheit": false,
+    "useTwelveHourClock": false,
+    "smartScheme": true,
+    "visualiserBars": 45
+  },
+  "session": {
+    "dragThreshold": 30,
+    "vimKeybinds": false,
+    "commands": {
+      "logout": ["loginctl", "terminate-user", ""],
+      "shutdown": ["systemctl", "poweroff"],
+      "hibernate": ["systemctl", "hibernate"],
+      "reboot": ["systemctl", "reboot"]
+    }
+  }
 }
 ```
 
@@ -402,7 +404,7 @@ which helped me a lot with learning how to use Quickshell.
 
 Finally another thank you to all the configs I took inspiration from (only one for now):
 
--   [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
+- [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
 
 ## Stonks 📈
 

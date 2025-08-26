@@ -1,7 +1,7 @@
-import qs.components
-import qs.services
-import qs.config
 import QtQuick
+import qs.components
+import qs.config
+import qs.services
 
 Column {
     id: root
@@ -15,7 +15,6 @@ Column {
 
         text: "calendar_month"
         color: root.colour
-
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
@@ -23,11 +22,11 @@ Column {
         id: text
 
         anchors.horizontalCenter: parent.horizontalCenter
-
         horizontalAlignment: StyledText.AlignHCenter
         text: Time.format(Config.services.useTwelveHourClock ? "hh\nmm\nA" : "hh\nmm")
         font.pointSize: Appearance.font.size.smaller
         font.family: Appearance.font.family.mono
         color: root.colour
     }
+
 }

@@ -1,6 +1,6 @@
-import qs.config
-import Quickshell
 import QtQuick
+import Quickshell
+import qs.config
 
 Item {
     id: root
@@ -18,4 +18,5 @@ Item {
         visibilities: root.visibilities
         panel: root.panel
     }
+
 }

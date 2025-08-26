@@ -1,6 +1,5 @@
-pragma Singleton
-
 import Quickshell
+pragma Singleton
 
 Singleton {
     // Literally just here to shorten accessing stuff :woe:
