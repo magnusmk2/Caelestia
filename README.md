@@ -1,40 +1,46 @@
-<h1 align=center>caelestia-shell</h1>
+<h1 align=center>Magnus's Caelestia Shell</h1>
 
 <div align=center>
 
-![GitHub last commit](https://img.shields.io/github/last-commit/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=9ccbfb)
-![GitHub Repo stars](https://img.shields.io/github/stars/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=b9c8da)
-![GitHub repo size](https://img.shields.io/github/repo-size/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=d3bfe6)
-[![Ko-Fi donate](https://img.shields.io/badge/donate-kofi?style=for-the-badge&logo=ko-fi&logoColor=ffffff&label=ko-fi&labelColor=101418&color=f16061&link=https%3A%2F%2Fko-fi.com%2Fsoramane)](https://ko-fi.com/soramane)
+![GitHub last commit](https://img.shields.io/github/last-commit/magnusmk2/Caelestia?style=for-the-badge&labelColor=101418&color=9ccbfb)
+![GitHub Repo stars](https://img.shields.io/github/stars/magnusmk2/Caelestia?style=for-the-badge&labelColor=101418&color=b9c8da)
+![GitHub repo size](https://img.shields.io/github/repo-size/magnusmk2/Caelestia?style=for-the-badge&labelColor=101418&color=d3bfe6)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&style=for-the-badge&labelColor=101418)](https://github.com/pre-commit/pre-commit)
 
 </div>
 
+> **🚀 Enhanced Fork**: This is Magnus's customized version of Caelestia with advanced network management, monitor information system, and comprehensive development infrastructure.
+
 https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
+
+## ✨ Magnus's Enhancements
+
+This fork includes several custom enhancements beyond the original Caelestia shell:
+
+- **🌐 Advanced Network Management**: Enhanced network information display with connection details
+- **🖥️ Monitor Information System**: Comprehensive monitor management with detailed hardware info
+- **⚡ BitDepth Service**: Dynamic color depth management for optimal display quality
+- **🔧 Development Infrastructure**: Pre-commit hooks, GitHub Actions, and automated quality assurance
+- **📊 Performance Monitoring**: Real-time system resource tracking and visualization
 
 ## Components
 
 - Widgets: [`Quickshell`](https://quickshell.outfoxxed.me)
 - Window manager: [`Hyprland`](https://hyprland.org)
-- Dots: [`caelestia`](https://github.com/caelestia-dots)
+- Original project: [`caelestia-dots`](https://github.com/caelestia-dots)
+- Fork maintainer: [`magnusmk2`](https://github.com/magnusmk2)
 
 ## Installation
 
-> [!NOTE]
-> This repo is for the desktop shell of the caelestia dots. If you want installation instructions
-> for the entire dots, head to [the main repo](https://github.com/caelestia-dots/caelestia) instead.
+> [!IMPORTANT]
+> This is Magnus's enhanced fork with custom network and monitor management features.
+> For the original Caelestia installation, see [caelestia-dots](https://github.com/caelestia-dots/caelestia).
 
-### Package manager
+### From Source (Recommended)
 
-> [!NOTE]
-> If you want to make your own changes/tweaks to the shell do NOT edit the files installed by the AUR
-> package. Instead, follow the instructions in the [manual installation section](#manual-installation).
+This enhanced version is best installed from source to get all the custom features and latest improvements:
 
-The shell is available from the AUR as `caelestia-shell-git`. You can install it with an AUR helper
-like [`yay`](https://github.com/Jguer/yay) or manually downloading the PKGBUILD and running `makepkg -si`.
-
-### Manual installation
-
-Dependencies:
+### Dependencies
 
 - [`caelestia-cli`](https://github.com/caelestia-dots/cli)
 - [`quickshell-git`](https://quickshell.outfoxxed.me) - this has to be the git version, not the latest tagged version
@@ -56,13 +62,30 @@ Dependencies:
 - [`swappy`](https://github.com/jtheoof/swappy)
 - [`libqalculate`](https://github.com/Qalculate/libqalculate)
 
-To install the shell manually, install all dependencies and clone this repo to `$XDG_CONFIG_HOME/quickshell/caelestia`.
-Then compile the beat detector and install it to `/usr/lib/caelestia/beat_detector`.
+### Installation Steps
+
+1. **Install dependencies** (see list above)
+
+2. **Clone Magnus's enhanced fork**:
 
 ```sh
 cd $XDG_CONFIG_HOME/quickshell
-git clone https://github.com/caelestia-dots/shell.git caelestia
-g++ -std=c++17 -Wall -Wextra -I/usr/include/pipewire-0.3 -I/usr/include/spa-0.2 -I/usr/include/aubio -o beat_detector caelestia/assets/beat_detector.cpp -lpipewire-0.3 -laubio
+git clone https://github.com/magnusmk2/Caelestia.git caelestia
+cd caelestia
+```
+
+3. **Set up development environment** (optional but recommended):
+
+```sh
+# Install pre-commit hooks for quality assurance
+./setup-precommit.sh
+```
+
+4. **Compile the beat detector**:
+
+```sh
+g++ -std=c++17 -Wall -Wextra -I/usr/include/pipewire-0.3 -I/usr/include/spa-0.2 -I/usr/include/aubio -o beat_detector assets/cpp/beat-detector.cpp -lpipewire-0.3 -laubio
+sudo mkdir -p /usr/lib/caelestia
 sudo mv beat_detector /usr/lib/caelestia/beat_detector
 ```
 
@@ -134,13 +157,45 @@ the command.
 
 ## Updating
 
-If installed via the AUR package, simply update your system (e.g. using `yay`).
-
-If installed manually, you can update by running `git pull` in `$XDG_CONFIG_HOME/quickshell/caelestia`.
+To update Magnus's enhanced fork:
 
 ```sh
 cd $XDG_CONFIG_HOME/quickshell/caelestia
-git pull
+git pull origin main
+```
+
+> [!TIP]
+> If you have pre-commit hooks installed, they will automatically validate any changes during updates.
+
+## 🔧 Development & Contributing
+
+This fork includes comprehensive development infrastructure:
+
+### Pre-commit Hooks
+
+- **Automatic code formatting** with Prettier
+- **Syntax validation** for YAML, JSON, XML files
+- **Structure validation** ensuring required directories exist
+- **Custom validation** for Magnus's network/monitor enhancements
+- **Commit message standards** using conventional commits
+- **Performance**: ~1.3 seconds execution time
+
+### GitHub Actions Workflows
+
+- **build-and-test**: Nix flake validation and build testing
+- **lint-qml**: QML code quality checks
+- **validate-structure**: Project structure verification
+- **check-customizations**: Validation of custom enhancements
+
+### Setting Up Development Environment
+
+```sh
+# Install pre-commit hooks (recommended for contributors)
+./setup-precommit.sh
+
+# Manual pre-commit installation
+pip install pre-commit
+pre-commit install
 ```
 
 ## Configuring
@@ -393,6 +448,24 @@ the launcher only shows an odd number of wallpapers at one time. If you only hav
 
 ## Credits
 
+### Original Caelestia Project
+
+This fork is based on the excellent work by the [Caelestia team](https://github.com/caelestia-dots):
+
+- Original shell design and implementation
+- Core QuickShell integration
+- Base system services and components
+
+### Magnus's Enhancements
+
+- **🌐 Network Management System**: Advanced network information display and connection management
+- **🖥️ Monitor Information Service**: Comprehensive monitor hardware detection and management
+- **⚡ BitDepth Service**: Dynamic color depth optimization for display quality
+- **🔧 Development Infrastructure**: Pre-commit hooks, GitHub Actions, automated quality assurance
+- **📊 Performance Monitoring**: Enhanced system resource tracking and visualization
+
+### Community Thanks
+
 Thanks to the Hyprland discord community (especially the homies in #rice-discussion) for all the help and suggestions
 for improving these dots!
 
@@ -400,18 +473,27 @@ A special thanks to [@outfoxxed](https://github.com/outfoxxed) for making Quicks
 and implementing various feature requests.
 
 Another special thanks to [@end_4](https://github.com/end-4) for his [config](https://github.com/end-4/dots-hyprland)
-which helped me a lot with learning how to use Quickshell.
+which helped with learning how to use Quickshell.
 
-Finally another thank you to all the configs I took inspiration from (only one for now):
+### Inspiration Sources
 
 - [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
+- [caelestia-dots/shell](https://github.com/caelestia-dots/shell) - Original project
 
-## Stonks 📈
+## Repository Stats 📈
 
-<a href="https://www.star-history.com/#caelestia-dots/shell&Date">
+<a href="https://www.star-history.com/#magnusmk2/Caelestia&caelestia-dots/shell&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=caelestia-dots/shell&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=caelestia-dots/shell&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=caelestia-dots/shell&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=magnusmk2/Caelestia,caelestia-dots/shell&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=magnusmk2/Caelestia,caelestia-dots/shell&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=magnusmk2/Caelestia,caelestia-dots/shell&type=Date" />
  </picture>
 </a>
+
+---
+
+<div align="center">
+
+**🚀 Enhanced by Magnus** | **⭐ Based on Caelestia** | **🔧 Powered by QuickShell**
+
+</div>
